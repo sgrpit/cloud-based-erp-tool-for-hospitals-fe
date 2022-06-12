@@ -88,7 +88,7 @@ export function Navbar() {
           <Link to="/Staff" className={classes.link}>
             Manage Staff
           </Link>
-          <Link to="/IPD Patient Details" className={classes.link}>
+          <Link to="/ManagePatient" className={classes.link}>
             Manage Patient
           </Link>
           <Link to="/AdmitPatient" className={classes.link}>

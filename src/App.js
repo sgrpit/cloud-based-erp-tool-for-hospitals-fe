@@ -24,6 +24,7 @@ import MyAppointments from "./Pages/Patient/MyAppointments";
 import MyHospitalization from "./Pages/Patient/MyHospitalization";
 import HealthRecords from "./Pages/Patient/HealthRecords";
 import BookAppointment from "./Pages/Patient/BookAppointment";
+import ManagePatient from "./Pages/Patient/ManagePatient";
 
 
 
@@ -54,6 +55,7 @@ function App() {
             <Route path="/MyAppointments" component={MyAppointments} />
             <Route path="/Hospitalization" component={MyHospitalization} />
             <Route path="/HealthRecords" component={HealthRecords} />
+            <Route path="/ManagePatient" component={ManagePatient} />
             
           </Switch>
         </BrowserRouter>

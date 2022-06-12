@@ -11,6 +11,7 @@ import Notification from '../../Component/Common/Notification';
 import {useHistory} from 'react-router-dom'
 import Popup from '../../Component/Common/Popup';
 import AddStaff from '../../Component/Staff/AddStaff';
+import { fetchRoles } from '../../Services/AdminServices';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -49,7 +50,7 @@ export default function Staff() {
     const classes = useStyles()
     const[departments, setDepartments] = useState([]);
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
-    
+    const [roles, setRoles] = useState([])
     const [staffForEdit, setStaffForEdit] = useState(null);
     const history = useHistory();
    
@@ -63,6 +64,18 @@ export default function Staff() {
             debugger;
             setStaffForEdit(res.data.data);
         })
+        fetchRoles().then((res) => {
+            let roleObj = []
+            debugger;
+            res.data.data.map((item) => {
+                let role = {};
+                role["id"] = item.id
+                role["title"] = item.roleName
+                roleObj.push(role)
+            });
+            debugger;
+            setRoles(roleObj);
+        }) 
     }, [])
 
 
@@ -98,7 +111,7 @@ export default function Staff() {
             
             {/* <Popup title="Add Staff" openPopup={openPopup} setOpenPopup={setOpenPopup} > */}
                 <AddStaff departments={departments} staffForEdit={staffForEdit}
-                    addOrEditStaff={addOrEditStaff}
+                    addOrEditStaff={addOrEditStaff} roleDetails={roles}
                     >
 
                 </AddStaff>

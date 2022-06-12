@@ -4,20 +4,18 @@ import PeopleOutlineTwoToneIcon from '@material-ui/icons/PeopleOutlineTwoTone';
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import { Paper, makeStyles, TableBody, TableRow, TableCell, Toolbar, InputAdornment } from '@material-ui/core';
+import { Paper, makeStyles, TableBody, TableRow, TableCell, Toolbar, InputAdornment, CircularProgress } from '@material-ui/core';
 import useTable from "../../Component/useTable"
 import Controls from "../../Component/Controls/Controls";
 import AddIcon from '@material-ui/icons/Add';
-// import Popup from "../../components/Popup";
-// import CloseIcon from '@material-ui/icons/Close';
-// import Notification from "../../components/Notification";
-// import ConfirmDialog from "../../components/ConfirmDialog";
-import { fetchStaffDetails, saveStaffDetails, updateStaffDetails } from '../../Services/StaffService';
+import { deleteStaffDetails, delteStaffDetails, fetchStaffDetails, saveStaffDetails, updateStaffDetails } from '../../Services/StaffService';
 import Popup from '../../Component/Common/Popup';
 import ConfirmDialog from '../../Component/Common/ConfirmDialog';
 import AddStaff from '../../Component/Staff/AddStaff';
 import Notification from '../../Component/Common/Notification';
 import { deleteDepartmentDetails, fetchDepartments } from '../../Services/DepartmentService';
+import { fetchRoles } from '../../Services/AdminServices';
+import { indigo } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -27,7 +25,14 @@ const useStyles = makeStyles(theme => ({
     newButton: {
         position: 'absolute',
         right: '10px'
-    }
+    },
+    fabProgress: {
+        color: indigo[500],
+        position: "absolute",
+        top: "50%",
+        left: "75%",
+        zIndex: 1
+      }
 }))
 
 const headCells = [
@@ -47,7 +52,8 @@ export default function StaffDetails() {
     const [openPopup, setOpenPopup] = useState(false)
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
     const[departments, setDepartments] = useState([]);
-
+    const [roles, setRoles] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
 
 
     useEffect(() => {
@@ -56,7 +62,19 @@ export default function StaffDetails() {
         });
         fetchDepartments().then((res) => {
             setDepartments(res.data.data)
-        })
+        });
+        fetchRoles().then((res) => {
+            let roleObj = []
+            debugger;
+            res.data.data.map((item) => {
+                let role = {};
+                role["id"] = item.id
+                role["title"] = item.roleName
+                roleObj.push(role)
+            });
+            debugger;
+            setRoles(roleObj);
+        }) 
     }, [])    
     
     const {
@@ -126,13 +144,19 @@ export default function StaffDetails() {
             ...confirmDialog,
             isOpen: false
         })
-        deleteDepartmentDetails(item).then();
-        fetchDepartments().then((res) => setDepartments(res.data));
-        setNotify({
-            isOpen: true,
-            message: 'Deleted Successfully',
-            type: 'success'
-        })
+        setIsLoading(true);
+        deleteStaffDetails(item).then((res) => {
+            if (res.data.succeeded) {
+                fetchStaffDetails().then((res) => setStaffDetails(res.data.data));
+                setNotify({
+                    isOpen: true,
+                    message: 'Deleted Successfully',
+                    type: 'success'
+                })
+            }
+        });
+
+        setIsLoading(false);
     }
 
     return (
@@ -142,7 +166,11 @@ export default function StaffDetails() {
                 subTitle="Manage Staff Details"
                 icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
             />
+            
             <Paper>
+            {isLoading && 
+                    <CircularProgress size={68} className={classes.fabProgress} />
+               }
                 <Toolbar>
                     <Controls.Button
                         text="Add New"
@@ -176,7 +204,7 @@ export default function StaffDetails() {
                                                 isOpen: true,
                                                 title: 'Are you sure to delete this record?',
                                                 subTitle: "You can't undo this operation",
-                                                onConfirm: () => { onDelete(item.patientUHID) }
+                                                onConfirm: () => { onDelete(item.id) }
                                             })
                                         }} 
                                         >
@@ -195,7 +223,7 @@ export default function StaffDetails() {
             <Popup
                 title="Add or Edit Departments" openPopup={openPopup} setOpenPopup={setOpenPopup} >
                 <AddStaff
-                    staffForEdit={staffForEdit}
+                    staffForEdit={staffForEdit} roleDetails={roles}
                     addOrEditStaff={addOrEditStaff} departments={departments}
                  />
                 

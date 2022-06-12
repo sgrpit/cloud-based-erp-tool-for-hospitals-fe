@@ -1,6 +1,7 @@
 import { Container, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core'
 import React from 'react'
 import { Form } from '../../Component/useForm'
+import { fCurrency } from '../../utils/formatNumber';
 const useStyles = makeStyles(theme => ({
     table: {
         marginTop: theme.spacing(3),
@@ -25,7 +26,7 @@ export default function DischargeForm(props) {
     const {inPatientDetails} = props
     debugger;
     return (
-        <Paper>
+        <Paper style={{marginTop:'2em'}}>
             <Container>
                 <Grid container>
                     <Grid item xs={12}>
@@ -78,7 +79,7 @@ export default function DischargeForm(props) {
                                                             <TableCell>{item.id}</TableCell>
                                                                 <TableCell>{item.treatmentName}</TableCell>
                                                                 <TableCell>{item.treatmentType}</TableCell>
-                                                                <TableCell>{item.treatmentAmount}</TableCell>
+                                                                <TableCell>{"₹" + fCurrency(item.treatmentAmount)}</TableCell>
                                                                 <TableCell>{item.treatmentDate}</TableCell>
                                                                 
                                                             </TableRow>

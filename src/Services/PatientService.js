@@ -1,7 +1,15 @@
 import api from '../Api/api'
 
+export const getAllPatients = () => {
+    return api.get('/Patient');
+}
+
 export const getPatientDetailsByUHID = (patientUHID) => {
     return api.get('/Patient/PatientUHID/' + patientUHID);
+}
+
+export const deletePatientDetails = (id) => {
+    return api.delete('/Patient/' + id);
 }
 
 export const bookPatientAppointment = (patientAppointment) => {

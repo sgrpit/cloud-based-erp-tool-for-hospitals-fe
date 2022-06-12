@@ -17,6 +17,6 @@ export const saveStaffDetails = (staff) => {
 export const updateStaffDetails = (staff) => {
     return api.put('/Staff/', staff);
 }
-export const delteStaffDetails = (id) => {
-    return api.put('/Staff?Id' + id);
+export const deleteStaffDetails = (id) => {
+    return api.delete('/Staff/' + id);
 }

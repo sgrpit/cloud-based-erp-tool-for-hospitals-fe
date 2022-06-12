@@ -24,6 +24,7 @@ const initialFValues = {
     joiningDate: new Date(),
     isPermanent: true,
     departmentsId: 0,
+    userRoleId: 0
 } 
 
 const genderItems = [
@@ -34,7 +35,7 @@ const genderItems = [
 
 export default function AddStaff(props) {
     const classes = useStyle();    
-    const {addOrEditStaff, staffForEdit, departments} = props
+    const {addOrEditStaff, staffForEdit, departments, roleDetails} = props
     debugger;
     const Validate = (fieldValues = values) => {
         let temp = {...errors}
@@ -103,7 +104,7 @@ export default function AddStaff(props) {
                                         />
                                     </Grid>
                                     <Grid item xs={4} className={classes.gridItem}>
-                                        <Controls.Input name='lastName' value={values.label}
+                                        <Controls.Input name='lastName' value={values.lastName}
                                             label="Last Name" onChange={handleInputChange}
                                             error={errors.lastName}
                                         />
@@ -163,6 +164,16 @@ export default function AddStaff(props) {
                                             onChange={handleInputChange}
                                             options={departments}
                                             error={errors.departmentsId}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4} className={classes.gridItem}>
+                                        <Controls.CommonSelect
+                                            name="userRoleId"
+                                            label="User Role"
+                                            value={values.userRoleId}
+                                            onChange={handleInputChange}
+                                            options={roleDetails}
+                                            error={errors.userRoleId}
                                         />
                                     </Grid>
                                     <Grid item xs={12} style={{ margin: '2em' }} className={classes.gridItem}>
