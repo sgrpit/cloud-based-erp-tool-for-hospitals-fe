@@ -11,7 +11,10 @@ const useStyles = makeStyles(theme => ({
         }
     },
     gridItem: {
-        width: '60%',
+        width: '90%',
+    },
+    "& .MuiFormControl-root": {
+        width: '10em'
     }
     
 }))
@@ -19,14 +22,15 @@ const useStyles = makeStyles(theme => ({
 const initialFValues = {
     id: 0,
     departmentName: '',    
-    departmentDesc: ''    
+    departmentDesc: '',
+    isAdminDepartment: false
 }
 
 
 export default function AddDepartments(props) {
     const classes = useStyles();
     const { addOrEditDepartment, deptForEdit } = props
-
+    debugger;
     const Validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('departmentName' in fieldValues)
@@ -59,6 +63,8 @@ export default function AddDepartments(props) {
         
     }
 
+
+
     useEffect(() => {
         if(deptForEdit != null){
             setValues({...deptForEdit})
@@ -69,37 +75,38 @@ export default function AddDepartments(props) {
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container className={classes.root}>
-                <Grid item sx={6} className={classes.gridItem}>
-                        <div style={{display:'flex'} }>
-                            <div><Controls.Input
-                                variant='outlined' name='departmentName' label='Department Name'
-                                value={values.departmentName} onChange={handleInputChange}
-                                error={errors.departmentName}
-                            /></div>
-                            <div><Controls.Input
-                                variant='outlined' name='departmentDesc' label='Department Description'
-                                value={values.departmentDesc} onChange={handleInputChange}
-                                error={errors.departmentDesc}
-                            /></div>
-                        </div>
+                <Grid item xs={6} className={classes.gridItem} style={{ display: 'flex' }}>
+                    <Controls.Input
+                        variant='outlined' name='departmentName' label='Department Name'
+                        value={values.departmentName} onChange={handleInputChange}
+                        error={errors.departmentName} />
+                    <Controls.Input style={{ width: '120%' }}
+                        variant='outlined' name='departmentDesc' label='Department Description'
+                        value={values.departmentDesc} onChange={handleInputChange}
+                        error={errors.departmentDesc} />
                 </Grid>
-               
-                <Grid item sx={6} className={classes.gridItem}>
-                    <div style={{display:'flex', marginLeft:'5em', marginTop:'1em'}}>
-                        <div>
-                            <Controls.Button
-                                type="submit"
-                                text="Submit" />
+                <Grid item xs={6} className={classes.gridItem}>
+                    <div style={{ display: 'flex' }}>
+                        <Controls.Checkbox style={{ width: '10em' }}
+                            name="isAdminDepartment"
+                            label="Is admin department"
+                            value={values.isAdminDepartment}
+                            onChange={handleInputChange}
+                        />
 
-                        </div>
-                        <div style={{marginLeft:'2em'}}>
-                            <Controls.Button
-                                text="Reset"
-                                color="default"
-                                onChange={resetForm}
-                            />
-                        </div>
                     </div>
+                </Grid>
+
+                <Grid item xs={6} className={classes.gridItem} style={{ display: 'flex' }}>
+                    <Controls.Button
+                        type="submit"
+                        text="Submit" />
+
+                    <Controls.Button
+                        text="Reset"
+                        color="default"
+                        onChange={resetForm}
+                    />
                 </Grid>
 
             </Grid>

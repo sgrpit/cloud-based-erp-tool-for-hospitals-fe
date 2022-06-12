@@ -5,7 +5,7 @@ import { Paper, Container, Toolbar } from '@material-ui/core'
 import Controls from '../../Component/Controls/Controls'
 import Popup from '../../Component/Common/Popup'
 import BookAppointment from '../../Component/Patient/BookAppointment'
-import { fetchDepartments } from '../../Services/DepartmentService'
+import { fetchDepartments, fetchNonAdminDepartments } from '../../Services/DepartmentService'
 import { withRouter } from 'react-router-dom'
 
 
@@ -16,7 +16,7 @@ export function PatientDashboard() {
   const [staffs, setStaffs] = useState([])
 
   useEffect(() => {
-    fetchDepartments().then((res) => {
+    fetchNonAdminDepartments().then((res) => {
       debugger;
       if(res.data.succeeded){
         setDepatments(res.data.data)

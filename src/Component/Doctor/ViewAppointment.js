@@ -21,6 +21,7 @@ const headCells = [
 
 
 export default function ViewAppointment() {
+    //const {appointmentDetails} = props
     const[appointments, setAppointments] = useState([])
     const [openPopup, setOpenPopup] = useState(false)
     const [openPrescriptionHistoryPopup, setOpenPrescriptionHistoryPopup] = useState(false)

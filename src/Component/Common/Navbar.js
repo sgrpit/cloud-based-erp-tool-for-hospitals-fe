@@ -143,16 +143,19 @@ export function Navbar() {
       )}
       {localStorage.getItem("RoleId") === "0" && (
         <div style={{width:'80%', textAlign:'left'}}  >
-          <Link to="/PatientDashboard" className={classes.link}>
+          <Link to="/AdminDashboard" className={classes.link}>
             Dashboard
           </Link>
-          <Link to="/View Appointment" className={classes.link}>
-            Consultation
+          <Link to="/BookMyAppointment" className={classes.link}>
+            Book My Appointments
           </Link>
-          <Link to="/View Appointment" className={classes.link}>
+          <Link to="/MyAppointments" className={classes.link}>
+            My Appointments
+          </Link>
+          <Link to="/HealthRecords" className={classes.link}>
             Health Records
           </Link>
-          <Link to="/IPD Patient Details" className={classes.link}>
+          <Link to="/Hospitalization" className={classes.link}>
             Hospitalization
           </Link>
         </div>

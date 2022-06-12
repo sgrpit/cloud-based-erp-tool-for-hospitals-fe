@@ -3,14 +3,20 @@ import PageHeader from '../../Component/Common/PageHeader'
 import PeopleOutlineTwoToneIcon from '@material-ui/icons/PeopleOutlineTwoTone'
 import { Container, Grid, Paper } from '@material-ui/core'
 import Controls from '../../Component/Controls/Controls'
+import { GetIPDPatientDetailsByPatientUHID } from '../../Services/PatientService'
+import DischargeForm from './DischargeForm'
 
 export default function Discharge() {
     const [patientUHID, setPatientUHID] = useState([]);
+    const [inPatientDetails, setInPatientDetails] = useState(null);
     const handleInputChange = e => {
         setPatientUHID(e.target.value)
     }
     const handleSearch = e => {
         debugger;
+        GetIPDPatientDetailsByPatientUHID(patientUHID).then((res) => {
+            setInPatientDetails(res.data.data);
+        })
         
     }
     return (
@@ -31,6 +37,7 @@ export default function Discharge() {
                     </Grid>
                 </Container>
             </Paper>
+            <DischargeForm inPatientDetails={inPatientDetails} />
         </>
     )
 }

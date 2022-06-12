@@ -20,6 +20,10 @@ import { OpacityRounded } from "@material-ui/icons";
 import opd from "./Pages/Doctors/opd";
 import ipd from "./Pages/Doctors/ipd";
 import Discharge from "./Pages/Admin/Discharge";
+import MyAppointments from "./Pages/Patient/MyAppointments";
+import MyHospitalization from "./Pages/Patient/MyHospitalization";
+import HealthRecords from "./Pages/Patient/HealthRecords";
+import BookAppointment from "./Pages/Patient/BookAppointment";
 
 
 
@@ -36,6 +40,7 @@ function App() {
             <Route path='/SignUp' component={SignUp} />            
             <Route path='/AdminDashboard' component={AdminDashboard} />
             <Route path='/PatientDashboard' component={PatientDashboard} />
+            <Route path='/BookMyAppointment' component={BookAppointment} />
             <Route path='/opd' component={opd} />
             <Route path='/ipd' component={ipd} />
             <Route path="/Doctor" component={DoctorDashboard} />
@@ -46,6 +51,9 @@ function App() {
             <Route path="/EditStaff" component={Staff} />
             <Route path="/EditPatient" component={EditPatientDetails} />
             <Route path="/AddStaff" component={AddStaff} />
+            <Route path="/MyAppointments" component={MyAppointments} />
+            <Route path="/Hospitalization" component={MyHospitalization} />
+            <Route path="/HealthRecords" component={HealthRecords} />
             
           </Switch>
         </BrowserRouter>

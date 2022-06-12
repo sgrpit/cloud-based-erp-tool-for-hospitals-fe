@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
@@ -16,6 +15,8 @@ import Controls from '../../Component/Controls/Controls';
 import { useForm } from '../../Component/useForm';
 import { PatientRegistration } from '../../Services/PatientService';
 import Notification from '../../Component/Common/Notification';
+import { CircularProgress } from '@material-ui/core';
+import { indigo } from "@material-ui/core/colors";
 
 function Copyright() {
   return (
@@ -48,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  fabProgress: {
+      color: indigo[500],
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      zIndex: 1
+    }
 }));
 
 const initialValues = {
@@ -62,33 +70,69 @@ export default function SignUp() {
   const classes = useStyles();
   const [patient, setPatient] = useState({})
   const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const Validate = (fieldValues = values) => {
+    let temp = { ...errors }
+    if ('firstName' in fieldValues)
+      temp.firstName = fieldValues.firstName ? "" : "Required"
+    if ('lastName' in fieldValues)
+      temp.lastName = fieldValues.lastName ? "" : "Required"
+      if ('mobileNo' in fieldValues)
+      temp.mobileNo = fieldValues.mobileNo ? "" : "Required"
+      if ('emailId' in fieldValues)
+      temp.emailId = fieldValues.emailId ? "" : "Required"
+      if ('password' in fieldValues)
+      temp.password = fieldValues.password ? "" : "Required"
+    setErrors({
+      ...temp
+    })
+    if (fieldValues === values)
+      return Object.values(temp).every(x => x === "")
+  }
+
+
+
 
   const {
     values,
     handleInputChange,
-    resetForm
-  } = useForm(initialValues)
+    resetForm,
+    errors,
+    setErrors
+  } = useForm(initialValues, false, Validate)
 
   const handleSubmit = e => {
     e.preventDefault();
-    debugger;
+    if(Validate()){
+      setIsLoading(true)
     PatientRegistration(values).then((res) => {
       if (res.data.succeeded) {
+        setIsLoading(false)
         setNotify({
           isOpen: true,
           message: 'Updated Successfully',
           type: 'success'
         })
         resetForm();
+        
       }
       else {
+        setIsLoading(false)
         setNotify({ 
           isOpen: true,
           message: res.data.message,
           type: 'error'
-        })
+        })        
       }
-    })
+    }, (error) => {
+      setIsLoading(false)
+        setNotify({ 
+          isOpen: true,
+          message: "Network error. Please try again after some time",
+          type: 'error'
+        })
+    })}
   }
 
 
@@ -96,6 +140,9 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+      {isLoading && 
+                    <CircularProgress size={68} className={classes.fabProgress} />
+               }
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -108,35 +155,35 @@ export default function SignUp() {
               <Controls.Input
                 name="firstName"
                 label="First Name" value={values.firstName}
-                onChange={handleInputChange}
+                onChange={handleInputChange} error={errors.firstName}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controls.Input
                 name="lastName"
                 label="Last Name" value={values.lastName}
-                onChange={handleInputChange}
+                onChange={handleInputChange} error={errors.lastName}
               />
             </Grid>
             <Grid item xs={12}>
               <Controls.Input style={{ width: '100%' }}
                 name="mobileNo"
                 label="Mobile No" value={values.mobileNo}
-                onChange={handleInputChange}
+                onChange={handleInputChange} error={errors.mobileNo}
               />
             </Grid>
             <Grid item xs={12}>
               <Controls.Input style={{ width: '100%' }}
                 name="emailId"
                 label="Email Id" value={values.emailId}
-                onChange={handleInputChange}
+                onChange={handleInputChange} error={errors.emailId}
               />
             </Grid>
             <Grid item xs={12}>
               <Controls.Input style={{ width: '100%' }}
                 name="password"
                 label="Password" value={values.password} type="password"
-                onChange={handleInputChange}
+                onChange={handleInputChange} error={errors.password}
               />
             </Grid>
             <Grid item xs={12}>

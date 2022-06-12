@@ -1,5 +1,5 @@
 import { FormControl, Grid, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { bookPatientAppointment } from '../../Services/PatientService'
 import { fetchDoctorsByDeptId, fetchStaffDetails } from '../../Services/StaffService'
 import Controls from '../Controls/Controls'
@@ -11,7 +11,7 @@ const initialFValues = {
     mobileNo: '',
     emailId: '',
     appointmentDate: new Date(),
-    appointmentTimeSlot: '',
+    appointmentTimeSlot: new Date().getTime(),
     departmentId: '',
     staffId: ''
 }
@@ -31,21 +31,22 @@ const useStyles = makeStyles(theme => ({
 export default function BookAppointment(props) {
 
     const classes = useStyles();
-    const {departments} = props;
+    const {departments, patientDetails, bookAppointment} = props;
     const[staffs, setStaffs] = useState([])
     debugger;
+    
     const {
         values,
         handleInputChange,
         errors,
-        setErrors,
         resetForm
     } = useForm(initialFValues)
 
+    values.patientName = patientDetails && patientDetails.firstName + " " + patientDetails.lastName
+    values.mobileNo = patientDetails && patientDetails.mobileNo
     const handleSubmit = e => {
-        debugger;
         e.preventDefault();
-        bookPatientAppointment(values).then();
+        bookAppointment(values, resetForm);
     }
 
     const handleDepartmentChange = (e) => {
@@ -110,14 +111,14 @@ export default function BookAppointment(props) {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '3em' }}>
+                    <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '6em' }}>
                         <Controls.DatePicker
                             label='Appointment Date'
                             value={values.appointmentDate} onChange={handleInputChange}
                             error={errors.appointmentDate}
                         />
                     </Grid>
-                    <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '3em' }}>
+                    <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '6em' }}>
                         <Controls.TimePicker label="Time Slot"
                             name="appointmentTimeSlot"
                             value={values.appointmentTimeSlot} onChange={handleInputChange}

@@ -13,7 +13,7 @@ export default function Checkbox(props) {
     })
 
     return (
-        <FormControl style={{width:'4em'}}>
+        <FormControl>
             <FormControlLabel 
                 control={<MuiCheckbox
                     name={name}

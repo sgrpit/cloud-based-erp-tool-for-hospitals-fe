@@ -5,6 +5,11 @@ export const fetchDepartments = () => {
     return api.get('/Department');
 }
 
+export const fetchNonAdminDepartments = () => {
+    return api.get('/Department/GetNonAdminDepartmentDetails');
+}
+
+
 export const upsertDepartmentDetails = (department) => {
     return api.post('/Department', department)
 }

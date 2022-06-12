@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => ({
 export default function PrescriptionHistory(props) {
     const {prescriptionHistory} = props
     const classes = useStyles();
-    debugger;
     return (
         <>
             <Table className={classes.table}>

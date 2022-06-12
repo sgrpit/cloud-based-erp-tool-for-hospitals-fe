@@ -91,8 +91,9 @@ export default function AdmitForm(props) {
                         <Grid item xs={12}>
                             <div className={classes.formWrapper}>
                                 <Form onSubmit={handleSubmit}>
-                                    <Grid container >
-                                        <Grid item xs={6} >
+                                <Container>
+                                    <Grid container style={{paddingLeft:'3em'}} >
+                                        <Grid item xs={6} sm={6}>
                                             <Typography component={'span'} >
                                             <div style={{display:'flex'}}>
                                                 <div><b>Name : &nbsp;</b></div>
@@ -120,7 +121,8 @@ export default function AdmitForm(props) {
                                             </Typography>                                            
                                         </Grid>
                                     </Grid>
-                                    <br />
+                                    </Container>
+                                    <br /> <br /> 
                                     <Container>
                                         <Grid container  >
                                             <Grid item xs={6} sm={4}>

@@ -19,7 +19,7 @@ export default function TimePicker(props) {
                 <KeyboardTimePicker
                     margin="normal"
                     id="time-picker"
-                    label="Time picker"
+                    label={label}
                     value={value}
                     onChange={time => onChange(convertToDefEventPara(name, time))}
                     KeyboardButtonProps={{

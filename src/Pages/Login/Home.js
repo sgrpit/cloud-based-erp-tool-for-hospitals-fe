@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
@@ -17,7 +15,8 @@ import { validatePatient, validateUser } from '../../Services/LoginSerivce';
 import { Form, useForm } from '../../Component/useForm';
 import Controls from '../../Component/Controls/Controls';
 import Notification from '../../Component/Common/Notification';
-
+import { CircularProgress } from '@material-ui/core';
+import { indigo } from "@material-ui/core/colors";
 
 
 function Copyright() {
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     image: {
-        backgroundImage: 'url(https://source.unsplash.com/random)',
+        backgroundImage: '../../assets/logo.jpg',
         backgroundRepeat: 'no-repeat',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -62,6 +61,13 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    fabProgress: {
+        color: indigo[500],
+        position: "absolute",
+        top: "50%",
+        left: "75%",
+        zIndex: 1
+      }
 }));
 
 const initialFValues = {
@@ -74,45 +80,35 @@ export default function SignInSide(props) {
     const classes = useStyles();
     const history = useHistory();
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
+    const [isLoading, setIsLoading] = useState(false)
 
+    const Validate = (fieldValues = values) => {
+        let temp = {...errors}
+        if ('userName' in fieldValues)
+            temp.userName = fieldValues.userName ? "" : "User name required"
+        if ('userPassword' in fieldValues)
+            temp.userPassword = fieldValues.userPassword ? "" : "Password Required"
+        setErrors({
+            ...temp
+        })
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x === "")
+    }
 
     const {
         values,
         setValues,
+        errors,
+        setErrors,
         handleInputChange
-    } = useForm(initialFValues, false)
+    } = useForm(initialFValues, false, Validate)
 
     const handleLogIn = e => {
         e.preventDefault()
         debugger;
-        // alert(values.isPatient);
-        // return false;
-        // dispatch(login(values.userName, values.userPassword, values.isPatient))
-        //     .then(() => {
-        //         // if(res.data.succeeded){
-        //         //     if(values.isPatient){
-        //         //         props.history.push('/Patient')
-        //         //     }
-        //         //     else{
-        //         //         props.history.push('/AdminDashboard')
-        //         //     }
-        //         // }
-        //         // else {
-        //         //     setNotify({
-        //         //         isOpen: true,
-        //         //         message: res.data.message,
-        //         //         type: 'error'
-        //         //     })
-        //         // }
-        //         props.history.push('/AdminDashboard')
-                
-        //         //window.location.reload();
-        //     })
-        //     .catch(() => {
-        //         window.location.reload();
-        //     })
+        if(Validate()){
+        setIsLoading(true);
         
-
         if (values.isPatient) {
             validatePatient(values.userName, values.userPassword).then((res => {
                 if (res.data.succeeded) {
@@ -121,17 +117,28 @@ export default function SignInSide(props) {
                     localStorage.setItem("RoleId", 0);
                     localStorage.setItem("PatientUHID", res.data.data.patientUHID);
                     localStorage.setItem("PatientName", res.data.data.firstName + " " + res.data.data.lastName);
+                    setIsLoading(false);
                     history.push('/Patient')
                 }
                 else {
+                    setIsLoading(false);
                     setNotify({
                         isOpen: true,
                         message: res.data.message,
                         type: 'error'
                     })
+
                     //setUserAuthenticated(res.data.succeeded)
                 }
-            }))
+            }),
+            (error) => {
+                setIsLoading(false);
+                setNotify({
+                    isOpen: true,
+                    message: "Network error. Please try again after some time",
+                    type: 'error'
+                })
+            })
 
         }
         else {
@@ -142,9 +149,11 @@ export default function SignInSide(props) {
                     localStorage.setItem("RoleId", res.data.data.userRoleId);
                     localStorage.setItem("StaffId", res.data.data.staffId);
                     localStorage.setItem("StaffName", res.data.data.firstName + " " + res.data.data.lastName);
+                    setIsLoading(false);
                     history.push('/AdminDashboard')
                 }
                 else {
+                    setIsLoading(false);
                     setNotify({
                         isOpen: true,
                         message: res.data.message,
@@ -152,17 +161,29 @@ export default function SignInSide(props) {
                     })
                 }
 
-            }))
+            }),
+            (error) => {
+                setIsLoading(false);
+                setNotify({
+                    isOpen: true,
+                    message: "Network error. Please try again after some time",
+                    type: 'error'
+                })
+            })
 
-        }
+        }}
     }
 
 
     return (
+        
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                {isLoading && 
+                    <CircularProgress size={68} className={classes.fabProgress} />
+               }
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
@@ -180,12 +201,12 @@ export default function SignInSide(props) {
                             </Grid>
                             <Grid item xs={12}>
                                 <Controls.Input style={{width:'70%'}} name="userName" label="User Name"
-                                    value={values.userName}
+                                    value={values.userName} error={errors.userName}
                                     onChange={handleInputChange} />
                             </Grid>
                             <Grid item xs={12}>
                                 <Controls.Input style={{width:'70%'}} name="userPassword" label="User Password"
-                                    value={values.userPassword}
+                                    value={values.userPassword} error={errors.userPassword}
                                     onChange={handleInputChange} />
                             </Grid>
                             
