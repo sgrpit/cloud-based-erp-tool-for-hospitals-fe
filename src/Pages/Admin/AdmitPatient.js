@@ -7,11 +7,13 @@ import { getPatientDetailsByUHID } from '../../Services/PatientService'
 import AdmitForm from './AdmitForm'
 import { fetchStaffDetails } from '../../Services/StaffService'
 import { getStaffDetailsByRoleID } from '../../Services/DoctorService'
+import Notification from '../../Component/Common/Notification'
 
 export default function AdmitPatient() {
     const [patientUHID, setPatientUHID] = useState([]);
     const [patientDetails, setPatientDetails] = useState([]);
     const [doctors, setDoctors] = useState([]);
+    const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
     const handleInputChange = e => {
         setPatientUHID(e.target.value)
@@ -62,6 +64,10 @@ export default function AdmitPatient() {
             <></>
             {/* {patientDetails ?? <AdmitForm patientDetails={patientDetails} />} */}
             <AdmitForm patientDetails={patientDetails} doctors={doctors} />
+            <Notification
+                    notify={notify}
+                    setNotify={setNotify}
+            />
         </>
     )
 }

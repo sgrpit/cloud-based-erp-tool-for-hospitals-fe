@@ -19,13 +19,13 @@ const useStyle = makeStyles(theme => ({
 
 export default function AddPrescription(props) {
     const classes = useStyle();
-    const {patientForTreatment} = props    
+    const {patientForTreatment, addOrEditPrescription} = props    
 
     return (
         <>
             {/* <Controls.Button name="viewPreviousPrescription"   text="Previous Prescription History" type="button" />
             <Controls.Button name="viewPreviousPrescription"  text="Previous Prescription History" type="button" /> */}
-            <AddDeleteTableRows patientForTreatment={patientForTreatment}></AddDeleteTableRows>
+            <AddDeleteTableRows addOrEditPrescription={addOrEditPrescription} patientForTreatment={patientForTreatment}></AddDeleteTableRows>
             
             
         </>

@@ -88,7 +88,7 @@ export default function Staff() {
                     message: 'Updated Successfully',
                     type: 'success'
                 })
-                //resetForm();
+                resetForm();
                 //history.push('/Staff');
             }
             else {
@@ -99,6 +99,12 @@ export default function Staff() {
                 })
 
             }
+        }, (error) => {
+            setNotify({
+                isOpen: true,
+                message: (error.response.data.message) ? error.response.data.message : "An error occurred. Please try again",
+                type: 'error'
+            })
         })
     }
     return (

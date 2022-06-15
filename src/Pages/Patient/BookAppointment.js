@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import PageHeader from '../../Component/Common/PageHeader'
-import { Paper, Container, Toolbar } from '@material-ui/core'
+import { Paper, Container, Toolbar, CircularProgress } from '@material-ui/core'
 import Controls from '../../Component/Controls/Controls'
 import Popup from '../../Component/Common/Popup'
 import BookAppointment from '../../Component/Patient/BookAppointment'
@@ -10,13 +10,14 @@ import { withRouter } from 'react-router-dom'
 import PeopleOutlineTwoToneIcon from '@material-ui/icons/PeopleOutlineTwoTone';
 import { bookPatientAppointment, getPatientDetailsByUHID } from '../../Services/PatientService'
 import Notification from '../../Component/Common/Notification'
+import { indigo } from '@material-ui/core/colors'
 
 
 
 export function PatientDashboard() {
     const [departments, setDepatments] = useState([])
     const [patientDetails, setPatientDetails] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false)
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
     const [staffs, setStaffs] = useState([])
 
@@ -41,7 +42,7 @@ export function PatientDashboard() {
 
     const bookAppointment = (appointment, resetForm) => {
         console.log(appointment);
-        debugger;
+        debugger;setIsLoading(true);
         bookPatientAppointment(appointment)
             .then((res) => {
                 setNotify({
@@ -49,6 +50,7 @@ export function PatientDashboard() {
                     message: 'Appointment Booked Successfully',
                     type: 'success'
                 })
+                resetForm()
             },
             (error) => {
                 setNotify({
@@ -57,11 +59,15 @@ export function PatientDashboard() {
                     type: 'error'
                 })
             })
+            setIsLoading(false);
     }
 
     return (
         <>
             <PageHeader title="Patient Dashboard" />
+            {isLoading && 
+                    <CircularProgress size={68} style={{color:indigo[500], position:'absolute', top:'50%', left:'50%', zIndex:1}} />
+               }
             <Paper>
                 <Container>
                     <BookAppointment 

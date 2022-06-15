@@ -89,6 +89,7 @@ export default function StaffDetails() {
     }
     
     const addOrEditStaff = (staff, resetForm) => {
+        setIsLoading(true);
         if(staff.id === 0){
             saveStaffDetails(staff).then((res) => {
                 if (res.data.succeeded) {
@@ -99,17 +100,23 @@ export default function StaffDetails() {
                         type: 'success'
                     })
                     resetForm();
+                    setOpenPopup(false)
                     fetchStaffDetails().then((res => setStaffDetails(res.data.data)));
                     
                 }
                 else {
                     setNotify({
                         isOpen: true,
-                        message: 'An error occurred while saving staff details',
+                        message: res.data.message,
                         type: 'failed'
                     })
-    
                 }
+            }, (error) => {
+                setNotify({
+                    isOpen: true,
+                    message: (error.response.data.message) ? error.response.data.message : "An error occurred. Please try again",
+                    type: 'error'
+                })
             })
         }
         else{
@@ -128,13 +135,20 @@ export default function StaffDetails() {
                 else {
                     setNotify({
                         isOpen: true,
-                        message: 'An error occurred while saving staff details',
+                        message: res.data.message,
                         type: 'failed'
                     })
     
                 }
+            }, (error) => {
+                setNotify({
+                    isOpen: true,
+                    message: (error.response.data.message) ? error.response.data.message : "An error occurred. Please try again",
+                    type: 'error'
+                })
             })
         }
+        setIsLoading(false);
         
     }
 

@@ -1,6 +1,7 @@
 import { Box, Container, FormControl, FormControlLabel, FormLabel, MuiCheckbox, Grid, makeStyles, Paper, TextareaAutosize, Typography, Checkbox, InputLabel, Select, MenuItem } from '@material-ui/core'
 import { ContactsOutlined, NetworkLockedOutlined } from '@material-ui/icons'
 import React, { useState } from 'react'
+import Notification from '../../Component/Common/Notification';
 import Controls from '../../Component/Controls/Controls';
 import { Form, useForm } from '../../Component/useForm';
 import { validateUser } from '../../Services/LoginSerivce';
@@ -60,6 +61,7 @@ const initialFValues = {
 export default function AdmitForm(props) {
     const classes = useStyles();   
     const { patientDetails, doctors } = props
+    const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
     
     
     debugger;
@@ -67,10 +69,23 @@ export default function AdmitForm(props) {
         e.preventDefault();
         debugger;
         PatientAdmission(values).then((res) => {
-            console.log(res.data.data);
+
+            if(res.data.succeeded){
+                setNotify({
+                    isOpen: true,
+                    message: 'Added Successfully',
+                    type: 'success'
+                })
+            }
+
         },
         (error) => {
-            alert(error);
+            setNotify({
+                isOpen: true,
+                message: 'An error occurred while patient admission',
+                type: 'success'
+            })
+
         }
         );
     }
@@ -187,6 +202,10 @@ export default function AdmitForm(props) {
                     </Grid>
                 </Container>
             </Paper>
+            <Notification
+                    notify={notify}
+                    setNotify={setNotify}
+            />
         </>
     )
 }

@@ -42,10 +42,11 @@ export default function BookAppointment(props) {
         resetForm
     } = useForm(initialFValues)
 
-    values.patientName = patientDetails && patientDetails.firstName + " " + patientDetails.lastName
-    values.mobileNo = patientDetails && patientDetails.mobileNo
+    //values.patientName = patientDetails && patientDetails.firstName + " " + patientDetails.lastName
+    //values.mobileNo = patientDetails && patientDetails.mobileNo
     const handleSubmit = e => {
         e.preventDefault();
+        values.patientId = patientDetails.id;
         bookAppointment(values, resetForm);
     }
 

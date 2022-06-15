@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 function AddDeleteTableRows(props) {
     const classes = useStyles();
-    const {patientForTreatment} = props
+    const {patientForTreatment, addOrEditPrescription} = props
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
     const [talbeRows, setRows] = useState([{
@@ -84,17 +84,16 @@ function AddDeleteTableRows(props) {
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log();
-        AddPatientPrescription(talbeRows).then((res) => {
-            if(res.data.succeeded){
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success'
-                })  
-            }
-        })
-        
+        addOrEditPrescription(talbeRows)
+        // AddPatientPrescription(talbeRows).then((res) => {
+        //     if(res.data.succeeded){
+        //         setNotify({
+        //             isOpen: true,
+        //             message: 'Added Successfully',
+        //             type: 'success'
+        //         })  
+        //     }
+        // })
     }
 
     return (
@@ -127,7 +126,7 @@ function AddDeleteTableRows(props) {
             {/* </TblContainer> */}
             </Table>
             <div>
-                <Controls.Button type="submit" text="Save" />
+                <Controls.Button type="submit" text="Save & Complete" />
             </div>
             </form>
             <Notification

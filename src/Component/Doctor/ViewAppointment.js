@@ -9,7 +9,8 @@ import Popup from '../Common/Popup'
 import AddPrescription from './AddPrescription'
 import VisibilityTwoToneIcon from '@material-ui/icons/VisibilityTwoTone';
 import PrescriptionHistory from '../Patient/PrescriptionHistory'
-import { GetPrescriptionHistoryByPatientId } from '../../Services/PatientService'
+import { AddPatientPrescription, GetPrescriptionHistoryByPatientId } from '../../Services/PatientService'
+import Notification from '../Common/Notification'
 
 
 const headCells = [
@@ -26,7 +27,9 @@ export default function ViewAppointment() {
     const [openPopup, setOpenPopup] = useState(false)
     const [openPrescriptionHistoryPopup, setOpenPrescriptionHistoryPopup] = useState(false)
     const [prescriptionHistory, setPrescriptionHistory] = useState(null);
-    const [patientForTreatment, setPatientForTreatment] = useState(null)
+    const [patientForTreatment, setPatientForTreatment] = useState(null);
+    const [addEditPrescription, setAddEditPrescription] = useState(null);
+    const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
     const {
         TblContainer,
@@ -55,6 +58,31 @@ export default function ViewAppointment() {
         })
         //setPatientForTreatment(item)
         setOpenPrescriptionHistoryPopup(true)
+    }
+    
+    const addOrEditPrescription = item => {
+        AddPatientPrescription(item).then((res) => {
+            
+            if(res.data.succeeded){
+                
+                getAppointmentsByStaffId(localStorage.getItem("Id")).then((res) => {
+                    setAppointments(res.data.data)
+                });
+                setNotify({
+                    isOpen: true,
+                    message: 'Added Successfully',
+                    type: 'success'
+                })
+                setOpenPopup(false);
+            }
+        },
+        (error) => {
+            setNotify({
+                isOpen: true,
+                message: 'An error occurred while adding prescription',
+                type: 'success'
+            })
+        })
     }
 
     return (
@@ -85,15 +113,20 @@ export default function ViewAppointment() {
                 title="Add Prescription" 
                 openPopup={openPopup} 
                 setOpenPopup={setOpenPopup} >
-                    <AddPrescription patientForTreatment={patientForTreatment}
+                    <AddPrescription addOrEditPrescription={addOrEditPrescription} patientForTreatment={patientForTreatment}
                  />                
             </Popup>
             <Popup
                 title="View Prescription History" 
                 openPopup={openPrescriptionHistoryPopup} 
                 setOpenPopup={setOpenPrescriptionHistoryPopup} >
-                    <PrescriptionHistory prescriptionHistory={prescriptionHistory}/>
+                    <PrescriptionHistory  
+                        prescriptionHistory={prescriptionHistory}/>
             </Popup>
+            <Notification
+                    notify={notify}
+                    setNotify={setNotify}
+            />
         </>
     )
 }

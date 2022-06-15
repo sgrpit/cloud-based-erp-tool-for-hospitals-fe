@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     image: {
-        backgroundImage: '../../assets/logo.jpg',
+        backgroundImage: 'url(https://source.unsplash.com/random)',
         backgroundRepeat: 'no-repeat',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -206,7 +206,7 @@ export default function SignInSide(props) {
                             </Grid>
                             <Grid item xs={12}>
                                 <Controls.Input style={{width:'70%'}} name="userPassword" label="User Password"
-                                    value={values.userPassword} error={errors.userPassword}
+                                    value={values.userPassword} type="password" error={errors.userPassword}
                                     onChange={handleInputChange} />
                             </Grid>
                             

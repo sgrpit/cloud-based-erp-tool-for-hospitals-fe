@@ -1,31 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Controls from '../Controls/Controls'
 import { Form, useForm } from '../useForm'
-import {Paper, Grid} from '@material-ui/core'
+import { Paper, Grid, CircularProgress } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { AirlineSeatIndividualSuiteSharp } from '@material-ui/icons'
+import { indigo } from '@material-ui/core/colors'
 
 const useStyle = makeStyles(theme => ({
 
 }))
 
 const initialFValues = {
-    id:0,
-    firstName:'',
-    lastName:'',
-    middleName:'',
-    mobileNo:'',
-    emailId:'',
+    id: 0,
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    mobileNo: '',
+    emailId: '',
     address: '',
     city: '',
-    zipCode:'',
+    zipCode: '',
     gender: '',
     dateOfBirth: new Date(),
     joiningDate: new Date(),
     isPermanent: true,
     departmentsId: 0,
     userRoleId: 0
-} 
+}
 
 const genderItems = [
     { id: 'male', title: 'Male' },
@@ -34,11 +35,12 @@ const genderItems = [
 ]
 
 export default function AddStaff(props) {
-    const classes = useStyle();    
-    const {addOrEditStaff, staffForEdit, departments, roleDetails} = props
+    const classes = useStyle();
+    const { addOrEditStaff, staffForEdit, departments, roleDetails } = props
     debugger;
+    const [isLoading, setIsLoading] = useState(false)
     const Validate = (fieldValues = values) => {
-        let temp = {...errors}
+        let temp = { ...errors }
         if ('firstName' in fieldValues)
             temp.firstName = fieldValues.firstName ? "" : "First Name Required"
         if ('middleName' in fieldValues)
@@ -53,7 +55,7 @@ export default function AddStaff(props) {
             temp.city = fieldValues.city ? "" : "CityRequired"
         if ('departmentsId' in fieldValues)
             temp.departmentsId = fieldValues.departmentsId ? 0 : "Department Required"
-        
+
         setErrors({
             ...temp
         })
@@ -69,7 +71,7 @@ export default function AddStaff(props) {
         setErrors,
         handleInputChange,
         resetForm
-    } = useForm(initialFValues)
+    } = useForm(initialFValues, false, Validate)
 
     useEffect(() => {
         if (staffForEdit != null)
@@ -80,12 +82,19 @@ export default function AddStaff(props) {
 
     const handleSubmit = e => {
         e.preventDefault()
-        addOrEditStaff(values, resetForm)
+        if (Validate()) {
+            setIsLoading(true);
+            addOrEditStaff(values, resetForm)
+            setIsLoading(false)
+        }
     }
 
     return (
         <>
             <Paper>
+                {isLoading &&
+                    <CircularProgress size={68} style={{ color: indigo[500], position: 'absolute', top: '50%', left: '50%', zIndex: 1 }} />
+                }
                 <Grid container>
                     <Grid item xs={12}>
                         <div className={classes.formWrapper}>
