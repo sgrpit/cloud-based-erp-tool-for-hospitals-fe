@@ -17,6 +17,7 @@ import Controls from '../../Component/Controls/Controls';
 import Notification from '../../Component/Common/Notification';
 import { CircularProgress } from '@material-ui/core';
 import { indigo } from "@material-ui/core/colors";
+import BGImage from  '../../assets/hero-bg.jpg'
 
 
 function Copyright() {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     image: {
-        backgroundImage: 'url(https://source.unsplash.com/random)',
+        backgroundImage: `url(${BGImage})`,
         backgroundRepeat: 'no-repeat',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
