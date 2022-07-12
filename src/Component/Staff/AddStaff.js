@@ -5,6 +5,7 @@ import { Paper, Grid, CircularProgress } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { AirlineSeatIndividualSuiteSharp } from '@material-ui/icons'
 import { indigo } from '@material-ui/core/colors'
+import validator from 'validator'
 
 const useStyle = makeStyles(theme => ({
 
@@ -48,13 +49,17 @@ export default function AddStaff(props) {
         if ('lastName' in fieldValues)
             temp.lastName = fieldValues.lastName ? "" : "last Name Required"
         if ('mobileNo' in fieldValues)
-            temp.mobileNo = fieldValues.mobileNo ? "" : "Mobile No Required"
+            temp.mobileNo = validator.isMobilePhone(fieldValues.mobileNo) ? "" : "Valid Mobile No Required"
+        if ('emailId' in fieldValues)
+            temp.emailId = validator.isEmail(fieldValues.emailId) ? "" : "Valid Email Id Required"
         if ('zipCode' in fieldValues)
             temp.zipCode = fieldValues.zipCode ? "" : "Zip code Required"
         if ('city' in fieldValues)
             temp.city = fieldValues.city ? "" : "CityRequired"
         if ('departmentsId' in fieldValues)
             temp.departmentsId = fieldValues.departmentsId ? 0 : "Department Required"
+        
+        
 
         setErrors({
             ...temp
@@ -126,7 +131,7 @@ export default function AddStaff(props) {
                                     </Grid>
                                     <Grid item xs={4} className={classes.gridItem}>
                                         <Controls.Input name='emailId' value={values.emailId}
-                                            label="Email Id" onChange={handleInputChange}
+                                            label="Email Id" onChange={handleInputChange}   error={errors.emailId}
                                         />
                                     </Grid>
                                     <Grid item xs={4} className={classes.gridItem}>
@@ -192,7 +197,7 @@ export default function AddStaff(props) {
                                         <Controls.Button style={{ marginLeft: '2em' }}
                                             text="Reset"
                                             color="default"
-                                            onChange={resetForm}
+                                            onClick={resetForm}
                                         />
                                     </Grid>
 

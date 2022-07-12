@@ -7,7 +7,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     const [errors, setErrors] = useState({});
 
     const handleInputChange = e => {
-        //debugger;
+        debugger;
         if (e.target.type === "checkbox") {
             //e.target.value = e.target.checked;
             const { name, checked } = e.target
@@ -30,7 +30,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         //
     }
 
-    const resetForm = () => {
+    const resetForm = e => {
         setValues(initialFValues);
         setErrors({})
     }

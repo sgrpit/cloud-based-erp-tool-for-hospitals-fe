@@ -18,6 +18,7 @@ import Notification from '../../Component/Common/Notification';
 import { CircularProgress } from '@material-ui/core';
 import { indigo } from "@material-ui/core/colors";
 import BGImage from  '../../assets/hero-bg.jpg'
+import { getAllByLabelText } from '@testing-library/react';
 
 
 function Copyright() {
@@ -74,7 +75,8 @@ const useStyles = makeStyles((theme) => ({
 const initialFValues = {
     isPatient: false,
     userName: '',
-    userPassword: ''
+    userPassword: '',
+    txtBoxLabel: 'Mobile No'
 }
 
 export default function SignInSide(props) {
@@ -82,11 +84,13 @@ export default function SignInSide(props) {
     const history = useHistory();
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
     const [isLoading, setIsLoading] = useState(false)
+    const [txtBoxLabel, setTxtBoxLabel] = useState('User Name')
+    const [isPatient, setIsPatient] = useState(false)
 
     const Validate = (fieldValues = values) => {
         let temp = {...errors}
         if ('userName' in fieldValues)
-            temp.userName = fieldValues.userName ? "" : "User name required"
+            temp.userName = fieldValues.userName ? "" : txtBoxLabel +  " required"
         if ('userPassword' in fieldValues)
             temp.userPassword = fieldValues.userPassword ? "" : "Password Required"
         setErrors({
@@ -103,6 +107,19 @@ export default function SignInSide(props) {
         setErrors,
         handleInputChange
     } = useForm(initialFValues, false, Validate)
+
+    const handleCheckBoxCheck = e => {
+        debugger;
+        values.isPatient = e.target.checked;
+        if(e.target.checked){
+            
+            setTxtBoxLabel("Mobile No")
+        }
+        else{
+            setTxtBoxLabel("User Name")
+        }
+        
+    }
 
     const handleLogIn = e => {
         e.preventDefault()
@@ -196,12 +213,12 @@ export default function SignInSide(props) {
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={9}>
                             <FormControlLabel
-                            control={<Checkbox name="isPatient" value={values.isPatient} color="primary" onChange={handleInputChange}  />}
+                            control={<Checkbox name="isPatient" value={values.isPatient} color="primary" onChange={handleCheckBoxCheck}  />}
                             label="I am Patient"
                         />
                             </Grid>
                             <Grid item xs={12}>
-                                <Controls.Input style={{width:'70%'}} name="userName" label="User Name"
+                                <Controls.Input style={{width:'70%'}} name="userName" label={txtBoxLabel}
                                     value={values.userName} error={errors.userName}
                                     onChange={handleInputChange} />
                             </Grid>

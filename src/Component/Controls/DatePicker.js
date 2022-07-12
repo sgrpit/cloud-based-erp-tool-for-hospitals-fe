@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 
 export default function DatePicker(props) {
 
-    const { name, label, value, onChange } = props
+    const { name, label, value,error=null, onChange, ...other } = props
     const convertToDefEventPara = (name, value) => ({
         target: {
             name, value
@@ -13,9 +13,10 @@ export default function DatePicker(props) {
     })
 
     return (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils} >
         <Grid container justifyContent="space-around">
-            <KeyboardDatePicker
+            <KeyboardDatePicker 
+               
                 margin="normal" variant="outlined"
                 name={name}
                 label={label}
@@ -25,6 +26,9 @@ export default function DatePicker(props) {
                 KeyboardButtonProps={{
                     'aria-label': 'change date',
                 }}
+                {...other}
+                {...(error && {error:true,helperText:error})}
+                
             />
             </Grid>
         </MuiPickersUtilsProvider>

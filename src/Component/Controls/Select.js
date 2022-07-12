@@ -34,13 +34,16 @@ export function CommonSelect(props) {
                 label={label}
                 name={name}
                 value={value}
-                onChange={onChange}>
+                onChange={onChange}               
+                {...(error && {error:true,helperText:error})}
+                >
                 <MenuItem value="">None</MenuItem>
                 {
                     options.map(
                         item => (<MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>)
                     )
                 }
+
             </MuiSelect>            
         </FormControl>
     )

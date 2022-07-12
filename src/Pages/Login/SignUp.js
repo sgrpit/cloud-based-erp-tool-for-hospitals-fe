@@ -17,6 +17,8 @@ import { PatientRegistration } from '../../Services/PatientService';
 import Notification from '../../Component/Common/Notification';
 import { CircularProgress } from '@material-ui/core';
 import { indigo } from "@material-ui/core/colors";
+import { TextsmsOutlined } from '@material-ui/icons';
+import validator from 'validator';
 
 function Copyright() {
   return (
@@ -74,14 +76,21 @@ export default function SignUp() {
 
   const Validate = (fieldValues = values) => {
     let temp = { ...errors }
+    let re = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
     if ('firstName' in fieldValues)
       temp.firstName = fieldValues.firstName ? "" : "Required"
     if ('lastName' in fieldValues)
       temp.lastName = fieldValues.lastName ? "" : "Required"
-      if ('mobileNo' in fieldValues)
-      temp.mobileNo = fieldValues.mobileNo ? "" : "Required"
-      if ('emailId' in fieldValues)
-      temp.emailId = fieldValues.emailId ? "" : "Required"
+      if ('mobileNo' in fieldValues){
+        temp.mobileNo = validator.isMobilePhone(fieldValues.mobileNo)  ? "" : "Enter Valid Mobile No"
+        temp.mobileNo  = fieldValues.mobileNo.length === 10 ? "" : "Enter Valid Mobile No"
+      }
+      
+      if ('emailId' in fieldValues){
+        //temp.emailId = fieldValues.emailId ? "" : "Required"
+        temp.emailId = validator.isEmail(fieldValues.emailId) ? "" : "Enter valid email"
+      }
+      
       if ('password' in fieldValues)
       temp.password = fieldValues.password ? "" : "Required"
     setErrors({
@@ -119,6 +128,7 @@ export default function SignUp() {
       }
       else {
         setIsLoading(false)
+        debugger;
         setNotify({ 
           isOpen: true,
           message: res.data.message,
@@ -127,9 +137,10 @@ export default function SignUp() {
       }
     }, (error) => {
       setIsLoading(false)
+        debugger;
         setNotify({ 
           isOpen: true,
-          message: "Network error. Please try again after some time",
+          message: (error.response.data.message) ? error.response.data.message : "An error occurred. Please try again",
           type: 'error'
         })
     })}

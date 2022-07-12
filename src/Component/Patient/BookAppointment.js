@@ -4,6 +4,7 @@ import { bookPatientAppointment } from '../../Services/PatientService'
 import { fetchDoctorsByDeptId, fetchStaffDetails } from '../../Services/StaffService'
 import Controls from '../Controls/Controls'
 import { Form, useForm } from '../useForm'
+import validator from 'validator'
 
 const initialFValues = {
     patientId: localStorage.getItem("Id"),
@@ -12,8 +13,8 @@ const initialFValues = {
     emailId: '',
     appointmentDate: new Date(),
     appointmentTimeSlot: new Date().getTime(),
-    departmentId: '',
-    staffId: ''
+    departmentId: 0,
+    staffId: 0
 }
 
 const useStyles = makeStyles(theme => ({
@@ -33,21 +34,51 @@ export default function BookAppointment(props) {
     const classes = useStyles();
     const {departments, patientDetails, bookAppointment} = props;
     const[staffs, setStaffs] = useState([])
-    debugger;
+
+    const Validate = (fieldValues = values) => {
+        let temp = { ...errors }
+        if ('patientName' in fieldValues)
+            temp.patientName = fieldValues.patientName ? "" : "Patient Name Required"
+        if ('mobileNo' in fieldValues)
+            temp.mobileNo = validator.isMobilePhone(fieldValues.mobileNo) ? "" : "Valid Mobile No Required"
+        if ('emailId' in fieldValues)
+            temp.emailId = validator.isEmail(fieldValues.emailId) ? "" : "Valid Email Id Required"
+        if ('departmentsId' in fieldValues)
+            temp.departmentsId = fieldValues.departmentsId ? 0 : "Department Required"
+        if ('staffId' in fieldValues)
+            temp.staffId = fieldValues.staffId ? 0 : "Doctor Required"
+        // if ('appointmentDate' in fieldValues)
+        //     temp.appointmentDate = fieldValues.appointmentDate > new Date() ? "" : "Date should not be in past"
+        
+        
+
+        setErrors({
+            ...temp
+        })
+        if (fieldValues == values)
+            return Object.values(temp).every(x => x == "")
+    };
     
     const {
         values,
         handleInputChange,
         errors,
-        resetForm
+        resetForm,
+        setErrors
     } = useForm(initialFValues)
 
     //values.patientName = patientDetails && patientDetails.firstName + " " + patientDetails.lastName
     //values.mobileNo = patientDetails && patientDetails.mobileNo
     const handleSubmit = e => {
         e.preventDefault();
-        values.patientId = patientDetails.id;
-        bookAppointment(values, resetForm);
+        debugger;
+        if (Validate()) {
+            values.patientId = patientDetails.id;
+            //values.appointmentDate = values.undefined;
+            bookAppointment(values, resetForm);
+        }
+
+        
     }
 
     const handleDepartmentChange = (e) => {
@@ -113,15 +144,15 @@ export default function BookAppointment(props) {
                         </FormControl>
                     </Grid>
                     <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '6em' }}>
-                        <Controls.DatePicker
-                            label='Appointment Date'
+                        <Controls.DatePicker label="Appointment Date"
+                            name="appointmentDate"
                             value={values.appointmentDate} onChange={handleInputChange}
-                            error={errors.appointmentDate}
+                            error={errors.appointmentDate} minDate={new Date()}
                         />
                     </Grid>
                     <Grid item sx={6} className={classes.gridItem} style={{ marginLeft: '6em' }}>
                         <Controls.TimePicker label="Time Slot"
-                            name="appointmentTimeSlot"
+                            name="appointmentTimeSlot" 
                             value={values.appointmentTimeSlot} onChange={handleInputChange}
                         />
                 </Grid>
@@ -137,7 +168,7 @@ export default function BookAppointment(props) {
                             <Controls.Button
                                 text="Reset"
                                 color="default"
-                                onChange={resetForm}
+                                onClick={resetForm}
                             />
                         </div>
                     </div>

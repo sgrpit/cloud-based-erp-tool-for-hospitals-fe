@@ -83,12 +83,13 @@ export default function Staff() {
         debugger;
         updateStaffDetails(staff).then((res) => {
             if (res.data.succeeded) {
+                
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
                     type: 'success'
                 })
-                resetForm();
+                
                 //history.push('/Staff');
             }
             else {

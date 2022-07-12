@@ -38,7 +38,7 @@ export default function PrescriptionHistory(props) {
                     {
                         prescriptionHistory && prescriptionHistory.map(item => (
                             <TableRow key={item.id}>
-                                <TableCell>{item.patientAppointment.staff.firstName + " " + item.patientAppointment.staff.firstName} </TableCell>
+                                <TableCell>{item.patientAppointment.staff.firstName + " " + item.patientAppointment.staff.lastName} </TableCell>
                                 <TableCell>{item.patientAppointment.appointmentDate} </TableCell>
                                 <TableCell>{item.drugName} </TableCell>
                                 <TableCell>

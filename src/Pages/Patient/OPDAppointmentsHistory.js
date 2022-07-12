@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import PageHeader from '../../Component/Common/PageHeader'
 import PeopleOutlineTwoToneIcon from '@material-ui/icons/PeopleOutlineTwoTone';
 import ViewAppointment from '../../Component/Doctor/ViewAppointment';
-import { getAppointmentsByStaffId } from '../../Services/DoctorService';
+import { getAppointmentsByStaffId, getOPDHistoryByStaffId } from '../../Services/DoctorService';
 import AddPrescription from '../../Component/Doctor/AddPrescription';
 import AddDeleteTableRows from '../../Component/AddDeleteTableRows';
 import { getAppointmentsByPatientId, GetPrescriptionHistoryByPatientId } from '../../Services/PatientService';
 import useTable from '../../Component/useTable';
-import { TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Container, Grid, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
 import Controls from '../../Component/Controls/Controls';
 import Popup from '../../Component/Common/Popup';
 import VisibilityTwoToneIcon from '@material-ui/icons/VisibilityTwoTone';
 import PrescriptionHistory from '../../Component/Patient/PrescriptionHistory';
 import { fDate } from '../../utils/formatTime';
+import { useForm } from '../../Component/useForm';
 
 
 const headCells = [
@@ -23,9 +24,14 @@ const headCells = [
     { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 
+//const from_Date =  
+const initialFValues = {
+    fromDate: new Date(new Date().setDate(new Date().getDate() - 7)),
+    toDate: new Date() 
+}
 
 
-export default function MyAppointments() {
+export default function OPDAppointmentsHistory() {
     const [appointments, setAppointments] = useState([])
     const [openPrescriptionHistoryPopup, setOpenPrescriptionHistoryPopup] = useState(false)
     const [prescriptionHistory, setPrescriptionHistory] = useState(null);
@@ -35,8 +41,17 @@ export default function MyAppointments() {
         TblHead,
     } = useTable(appointments, headCells);
 
+    const {
+        values,
+        handleInputChange,
+        errors,
+        resetForm,
+        setErrors
+    } = useForm(initialFValues)
+
     useEffect(() => {
-        getAppointmentsByPatientId(localStorage.getItem("Id")).then((res) => {
+        debugger;
+        getOPDHistoryByStaffId(localStorage.getItem("Id"), fDate(values.fromDate) , fDate(values.toDate)).then((res) => {
             debugger;
             setAppointments(res.data.data)
         },
@@ -55,16 +70,48 @@ export default function MyAppointments() {
         setOpenPrescriptionHistoryPopup(true)
     }
 
+    const handleClick = e => {
+        getOPDHistoryByStaffId(localStorage.getItem("Id"), fDate(values.fromDate) , fDate(values.toDate)).then((res) => {
+            setAppointments(res.data.data)
+            
+        },
+        (error) => {
+
+        })
+    }
+
     return (
         <>
             <PageHeader title="My Appointments" subTitle="My Appointments"
                 icon={<PeopleOutlineTwoToneIcon fontSize="large" />} />
-
+            <Paper>
+                <Container>
+                    <Grid container >
+                        <Grid item xs={6} sm={3}>
+                        <Controls.DatePicker label="From Date"
+                            name="fromDate"
+                            value={values.fromDate} onChange={handleInputChange}
+                             
+                        />
+                        </Grid>
+                        <Grid item xs={6} sm={3}>
+                        <Controls.DatePicker label="To Date"
+                            name="toDate"
+                            value={values.toDate} onChange={handleInputChange}
+                           
+                        />
+                        </Grid>
+                        <Grid item xs={6} sm={1}>
+                            <Controls.Button type="Button" text="Search" onClick={handleClick} />
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Paper>
             <TblContainer>
                 <TblHead />
                 <TableBody>
                     {
-                        appointments && appointments.map(item => (
+                        appointments ? appointments.map(item => (
                             <TableRow key={item.id}>
                                 <TableCell>{item.patient.patientUHID}</TableCell>
                                 <TableCell>{item.patientName}</TableCell>
@@ -77,7 +124,9 @@ export default function MyAppointments() {
                                     ><VisibilityTwoToneIcon fontSize="small" /></Controls.ActionButton>
                                 </TableCell>
                             </TableRow>
-                        ))
+                        )) : <TableRow><TableCell>No appointments</TableCell></TableRow>
+                       
+                         
                     }
 
                 </TableBody>

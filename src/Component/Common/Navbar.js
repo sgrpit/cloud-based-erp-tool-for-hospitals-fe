@@ -113,6 +113,9 @@ export function Navbar() {
           <Link to="/ipd" className={classes.link}>
             IPD Patient
           </Link>
+          <Link to="/OPDAppointmentsHistory" className={classes.link}>
+            OPD History
+          </Link>
         </div>
       )}
       {localStorage.getItem("RoleId") === "3" && (

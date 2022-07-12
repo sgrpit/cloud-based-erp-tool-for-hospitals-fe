@@ -25,6 +25,7 @@ import MyHospitalization from "./Pages/Patient/MyHospitalization";
 import HealthRecords from "./Pages/Patient/HealthRecords";
 import BookAppointment from "./Pages/Patient/BookAppointment";
 import ManagePatient from "./Pages/Patient/ManagePatient";
+import OPDAppointmentsHistory from "./Pages/Patient/OPDAppointmentsHistory";
 
 
 
@@ -56,6 +57,7 @@ function App() {
             <Route path="/Hospitalization" component={MyHospitalization} />
             <Route path="/HealthRecords" component={HealthRecords} />
             <Route path="/ManagePatient" component={ManagePatient} />
+            <Route path="/OPDAppointmentsHistory" component={OPDAppointmentsHistory} />
             
           </Switch>
         </BrowserRouter>

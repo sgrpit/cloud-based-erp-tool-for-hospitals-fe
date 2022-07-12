@@ -191,7 +191,7 @@ export default function StaffDetails() {
                         variant="outlined"
                         startIcon={<AddIcon />}
                         className={classes.newButton}
-                        onClick={() => { setOpenPopup(true); }}
+                        onClick={() => { openInPopup(null) }}
                     />
                 </Toolbar>
                 <TblContainer>
@@ -235,7 +235,7 @@ export default function StaffDetails() {
             </TblContainer>
             </Paper>
             <Popup
-                title="Add or Edit Departments" openPopup={openPopup} setOpenPopup={setOpenPopup} >
+                title="Add or Edit Staff Detail" openPopup={openPopup} setOpenPopup={setOpenPopup} >
                 <AddStaff
                     staffForEdit={staffForEdit} roleDetails={roles}
                     addOrEditStaff={addOrEditStaff} departments={departments}
